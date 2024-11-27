@@ -116,3 +116,14 @@ select, input, button {
     border-radius: 4px;
     font-size: 1rem;
 }
+button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
