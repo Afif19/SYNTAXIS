@@ -22,9 +22,9 @@ let state ={
     bpjsNumber:'',
 };
 
-function renderAPP(){
+// function renderAPP(){
 
-}
+// }
 
 function renderHospitalSelection() {
     const hospitalList = document.getElementById('app');
