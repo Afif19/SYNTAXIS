@@ -22,6 +22,53 @@ let state ={
     bpjsNumber:'',
 };
 
+function generateUniqueCode(speciality) {
+    const date = new Date();
+    const year = date.getFullYear().toString().slice(-2);
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    
+    let prefix;
+    switch(speciality.toLowerCase()) {
+        case 'poli umum':
+            prefix = 'PU';
+            break;
+        case 'poli anak':
+            prefix = 'PA';
+            break;
+        case 'poli gigi':
+            prefix = 'PG';
+            break;
+        default:
+            prefix = 'XX';
+    }
+    return `${prefix}-${year}${month}${day}-${random}`;
+}
+
+function renderApp() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+
+    switch (state.step) {
+        case 1:
+            renderHospitalSelection();
+            break;
+        case 2:
+            renderCalendarAndDoctors();
+            break;
+        case 3:
+            renderAuthPage();
+            break;
+        case 4:
+            renderBookingForm();
+            break;
+        case 5:
+            renderConfirmation();
+            break;
+    }
+}
+
 // function renderAPP(){
 
 // }
