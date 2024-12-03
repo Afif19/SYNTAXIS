@@ -1,9 +1,48 @@
-<html>
-    <head>
-        <title>SYNTAXIS</title>
-    </head>
-    <body>
-        
-        
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS Booking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="hospital-icon.png" alt="Hospital Icon" width="40" height="40">
+                <span>RS Booking</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="renderHome()">Beranda</a></li>
+                    <li><a href="#" class="active" onclick="renderLayanan()">Layanan</a></li>
+                    <li><a href="#" onclick="renderAbout()">Tentang Kami</a></li>
+                    <li><a href="#" onclick="renderContact()">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="app">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 RS Booking System. All rights reserved.</p>
+            <div>
+                <a href="#">Syarat & Ketentuan</a>
+                <a href="#">Privasi</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
 </html>
