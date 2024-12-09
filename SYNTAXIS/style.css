@@ -162,9 +162,10 @@ button:hover {
 }
 
 footer {
-    background-color: #fff;
+    background-color: #ffffff;
     padding: 1rem 0;
     text-align: center;
+
     color: var(--light-text-color);
    
 }
@@ -174,7 +175,7 @@ footer .container {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    position: relative;
+    position: fixed;
     bottom: 0;
     width: 100%;
 }
