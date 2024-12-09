@@ -1,14 +1,17 @@
 // Data (normally this would come from a server)
 const hospitals = [
-    { id: 1, name: 'RSUD Sleman ' },
+    { id: 1, name: 'RSUD Sleman' },
     { id: 2, name: 'RS Puri Husada' },
     { id: 3, name: 'RS JIH' },
 ];
 
 const doctors = [
-    { id: 1, name: 'dr. Ahmad', speciality: 'Poli Umum', schedule: '08:00 - 12:00', image: 'doctor1.jpg' },
-    { id: 2, name: 'dr. Sarah', speciality: 'Poli Anak', schedule: '13:00 - 17:00', image: 'doctor2.jpg' },
-    { id: 3, name: 'dr. Michael', speciality: 'Poli Gigi', schedule: '09:00 - 15:00', image: 'doctor3.jpg' },
+    { id: 1, name: 'dr. Ahmad', speciality: 'Poli Umum', schedule: '08:00 - 12:00', image: 'doctor1.jpg', hospitalId: 1 },
+    { id: 2, name: 'dr. Sarah', speciality: 'Poli Anak', schedule: '13:00 - 17:00', image: 'doctor2.jpg', hospitalId: 1 },
+    { id: 3, name: 'dr. Michael', speciality: 'Poli Gigi', schedule: '09:00 - 15:00', image: 'doctor3.jpg', hospitalId: 2 },
+    { id: 4, name: 'dr. Emily', speciality: 'Poli Umum', schedule: '10:00 - 14:00', image: 'doctor4.jpg', hospitalId: 2 },
+    { id: 5, name: 'dr. David', speciality: 'Poli Anak', schedule: '08:00 - 16:00', image: 'doctor5.jpg', hospitalId: 3 },
+    { id: 6, name: 'dr. Lisa', speciality: 'Poli Gigi', schedule: '11:00 - 15:00', image: 'doctor6.jpg', hospitalId: 3 },
 ];
 
 let state = {
@@ -78,16 +81,19 @@ function renderHospitalSelection() {
                 <option value="">Pilih Rumah Sakit</option>
                 ${hospitals.map(hospital => `<option value="${hospital.id}">${hospital.name}</option>`).join('')}
             </select>
+            <div id="scheduleContainer" class="schedule-container"></div>
             <button id="nextBtn" disabled>Lanjutkan</button>
         </div>
     `;
 
     const hospitalSelect = document.getElementById('hospitalSelect');
     const nextBtn = document.getElementById('nextBtn');
+    const scheduleContainer = document.getElementById('scheduleContainer');
 
     hospitalSelect.addEventListener('change', (e) => {
         state.selectedHospital = e.target.value;
         nextBtn.disabled = !state.selectedHospital;
+        renderHospitalSchedule(state.selectedHospital);
     });
 
     nextBtn.addEventListener('click', () => {
@@ -97,7 +103,32 @@ function renderHospitalSelection() {
     });
 }
 
-// ... (kode sebelumnya tetap sama)
+function renderHospitalSchedule(hospitalId) {
+    const scheduleContainer = document.getElementById('scheduleContainer');
+    const hospitalDoctors = doctors.filter(doctor => doctor.hospitalId == hospitalId);
+
+    if (hospitalDoctors.length === 0) {
+        scheduleContainer.innerHTML = '<p>Tidak ada jadwal dokter tersedia untuk rumah sakit ini.</p>';
+        return;
+    }
+
+    let scheduleHTML = '<h3>Jadwal Dokter</h3>';
+    hospitalDoctors.forEach(doctor => {
+        scheduleHTML += `
+            <div class="doctor-schedule">
+                <img src="${doctor.image}" alt="${doctor.name}" class="doctor-avatar">
+                <div class="doctor-info">
+                    <h4>${doctor.name}</h4>
+                    <p>${doctor.speciality}</p>
+                    <p>Jadwal: ${doctor.schedule}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    scheduleContainer.innerHTML = scheduleHTML;
+}
+
 
 function renderCalendarAndDoctors() {
     const app = document.getElementById('app');
@@ -105,12 +136,14 @@ function renderCalendarAndDoctors() {
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
+    const hospitalDoctors = doctors.filter(doctor => doctor.hospitalId == state.selectedHospital);
+
     app.innerHTML = `
         <div class="card">
             <h2>Pilih Tanggal dan Dokter</h2>
             <div id="calendar" class="calendar"></div>
             <div class="doctor-list">
-                ${doctors.map(doctor => `
+                ${hospitalDoctors.map(doctor => `
                     <div class="doctor-card" data-id="${doctor.id}">
                         <img src="${doctor.image}" alt="${doctor.name}">
                         <h3>${doctor.name}</h3>
@@ -202,8 +235,6 @@ function renderCalendar(year, month) {
         renderCalendar(newDate.getFullYear(), newDate.getMonth());
     });
 }
-
-// ... (kode selanjutnya tetap sama)
 
 function renderAuthPage() {
     const app = document.getElementById('app');
@@ -372,3 +403,4 @@ function renderContact() {
 
 // Initialize the app
 renderApp();
+
