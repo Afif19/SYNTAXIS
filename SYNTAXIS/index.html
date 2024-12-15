@@ -6,7 +6,6 @@
     <title>RS Booking System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -17,11 +16,10 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" data-view="home">Beranda</a></li>
-                    <li><a href="#" data-view="services">Layanan</a></li>
-                    <li><a href="#" data-view="about">Tentang Kami</a></li>
-                    <li><a href="#" data-view="contact">Kontak</a></li>
-                    <li><a href="#" onclick="renderAdminInterface(); return false;">Admin Login</a></li>
+                    <li><a href="#" onclick="renderHome()">Beranda</a></li>
+                    <li><a href="#"  onclick="renderApp()">Layanan</a></li>
+                    <li><a href="#" onclick="renderAbout()">Tentang Kami</a></li>
+                    <li><a href="#" onclick="renderContact()">Kontak</a></li>
                 </ul>
             </nav>
         </div>
@@ -30,6 +28,7 @@
     <main>
         <div class="container">
             <div id="app">
+                <!-- Content will be dynamically inserted here -->
             </div>
         </div>
     </main>
@@ -47,4 +46,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

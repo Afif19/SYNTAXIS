@@ -153,8 +153,7 @@ let state = {
     bpjsNumber: '',
     currentAdmin: null,
     adminLoggedIn: false,
-    currentView: 'home',
-    adminView: 'login' // New property for admin view state
+    currentView: 'home'
 };
 
 function generateUniqueCode(speciality) {
@@ -191,7 +190,7 @@ function renderApp() {
     const app = document.getElementById('app');
     app.innerHTML = '';
 
-    if (state.adminView) {
+    if (state.adminLoggedIn) {
         renderAdminInterface();
     } else {
         switch (state.currentView) {
@@ -244,267 +243,27 @@ function renderUserInterface() {
     }
 }
 
-function renderAdminDashboard() {
-    const app = document.getElementById('app');
-    const hospital = hospitals.find(h => h.id === state.currentAdmin.hospitalId);
-    
-    app.innerHTML = `
-        <div class="admin-dashboard">
-            <h2>Selamat Datang, ${state.currentAdmin.username}</h2>
-            <p>Rumah Sakit: ${hospital.name}</p>
-            <div class="admin-menu">
-                <button onclick="renderPatientStatistics()">Statistik Pasien</button>
-                <button onclick="renderDoctorManagement()">Manajemen Dokter</button>
-                <button onclick="renderScheduleManagement()">Manajemen Jadwal</button>
-                <button onclick="logout()">Logout</button>
-            </div>
-            <div id="adminContent"></div>
-        </div>
-    `;
-}
-
-function renderPatientStatistics() {
-    const adminContent = document.getElementById('adminContent');
-    const hospitalPatients = patients.filter(p => p.hospitalId === state.currentAdmin.hospitalId);
-    const poliCounts = hospitalPatients.reduce((acc, patient) => {
-        acc[patient.poli] = (acc[patient.poli] || 0) + 1;
-        return acc;
-    }, {});
-
-    let statsHTML = '<h3>Statistik Pasien</h3><ul>';
-    for (const [poli, count] of Object.entries(poliCounts)) {
-        statsHTML += `<li>${poli}: ${count} pasien</li>`;
-    }
-    statsHTML += '</ul>';
-
-    adminContent.innerHTML = statsHTML;
-}
-
-function renderDoctorManagement() {
-    const adminContent = document.getElementById('adminContent');
-    const hospitalDoctors = doctors.filter(d => d.hospitalId === state.currentAdmin.hospitalId);
-
-    let doctorListHTML = `
-        <h3>Manajemen Dokter</h3>
-        <button onclick="showAddDoctorForm()">Tambah Dokter Baru</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Spesialisasi</th>
-                    <th>Sub-Spesialisasi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    
-    for (const doctor of hospitalDoctors) {
-        doctorListHTML += `
-            <tr>
-                <td>${doctor.name}</td>
-                <td>${doctor.speciality}</td>
-                <td>${doctor.subSpeciality}</td>
-                <td>
-                    <button onclick="editDoctor(${doctor.id})">Edit</button>
-                    <button onclick="deleteDoctor(${doctor.id})">Hapus</button>
-                </td>
-            </tr>
-        `;
-    }
-    doctorListHTML += '</tbody></table>';
-
-    adminContent.innerHTML = doctorListHTML;
-}
-
-function renderScheduleManagement() {
-    const adminContent = document.getElementById('adminContent');
-    const hospitalDoctors = doctors.filter(d => d.hospitalId === state.currentAdmin.hospitalId);
-
-    let scheduleHTML = `
-        <h3>Manajemen Jadwal</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nama Dokter</th>
-                    <th>Senin</th>
-                    <th>Selasa</th>
-                    <th>Rabu</th>
-                    <th>Kamis</th>
-                    <th>Jumat</th>
-                    <th>Sabtu</th>
-                    <th>Minggu</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
-    for (const doctor of hospitalDoctors) {
-        scheduleHTML += `
-            <tr>
-                <td>${doctor.name}</td>
-                <td>${doctor.schedule.senin}</td>
-                <td>${doctor.schedule.selasa}</td>
-                <td>${doctor.schedule.rabu}</td>
-                <td>${doctor.schedule.kamis}</td>
-                <td>${doctor.schedule.jumat}</td>
-                <td>${doctor.schedule.sabtu}</td>
-                <td>${doctor.schedule.minggu}</td>
-                <td>
-                    <button onclick="editSchedule(${doctor.id})">Edit Jadwal</button>
-                </td>
-            </tr>
-        `;
-    }
-    scheduleHTML += '</tbody></table>';
-
-    adminContent.innerHTML = scheduleHTML;
-}
-
-function showAddDoctorForm() {
-    const adminContent = document.getElementById('adminContent');
-    adminContent.innerHTML = `
-        <h3>Tambah Dokter Baru</h3>
-        <form id="addDoctorForm">
-            <input type="text" id="doctorName" placeholder="Nama Dokter" required>
-            <input type="text" id="doctorSpeciality" placeholder="Spesialisasi" required>
-            <input type="text" id="doctorSubSpeciality" placeholder="Sub-Spesialisasi" required>
-            <button type="submit">Tambah Dokter</button>
-        </form>
-        <button onclick="renderDoctorManagement()">Batal</button>
-    `;
-
-    document.getElementById('addDoctorForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        addDoctor();
-    });
-}
-
-function addDoctor() {
-    const name = document.getElementById('doctorName').value;
-    const speciality = document.getElementById('doctorSpeciality').value;
-    const subSpeciality = document.getElementById('doctorSubSpeciality').value;
-
-    const newDoctor = {
-        id: doctors.length + 1,
-        name,
-        speciality,
-        subSpeciality,
-        schedule: {
-            senin: '-',
-            selasa: '-',
-            rabu: '-',
-            kamis: '-',
-            jumat: '-',
-            sabtu: '-',
-            minggu: '-'
-        },
-        image: 'default-doctor.jpg',
-        hospitalId: state.currentAdmin.hospitalId
-    };
-
-    doctors.push(newDoctor);
-    renderDoctorManagement();
-}
-
-function editDoctor(doctorId) {
-    const doctor = doctors.find(d => d.id === doctorId);
-    const adminContent = document.getElementById('adminContent');
-    adminContent.innerHTML = `
-        <h3>Edit Dokter</h3>
-        <form id="editDoctorForm">
-            <input type="text" id="doctorName" value="${doctor.name}" required>
-            <input type="text" id="doctorSpeciality" value="${doctor.speciality}" required>
-            <input type="text" id="doctorSubSpeciality" value="${doctor.subSpeciality}" required>
-            <button type="submit">Update Dokter</button>
-        </form>
-        <button onclick="renderDoctorManagement()">Batal</button>
-    `;
-
-    document.getElementById('editDoctorForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        updateDoctor(doctorId);
-    });
-}
-
-function updateDoctor(doctorId) {
-    const doctor = doctors.find(d => d.id === doctorId);
-    doctor.name = document.getElementById('doctorName').value;
-    doctor.speciality = document.getElementById('doctorSpeciality').value;
-    doctor.subSpeciality = document.getElementById('doctorSubSpeciality').value;
-    renderDoctorManagement();
-}
-
-function deleteDoctor(doctorId) {
-    if (confirm('Apakah Anda yakin ingin menghapus dokter ini?')) {
-        const index = doctors.findIndex(d => d.id === doctorId);
-        if (index !== -1) {
-            doctors.splice(index, 1);
-            renderDoctorManagement();
-        }
-    }
-}
-
-function editSchedule(doctorId) {
-    const doctor = doctors.find(d => d.id === doctorId);
-    const adminContent = document.getElementById('adminContent');
-    adminContent.innerHTML = `
-        <h3>Edit Jadwal - ${doctor.name}</h3>
-        <form id="editScheduleForm">
-            <label for="senin">Senin:</label>
-            <input type="text" id="senin" value="${doctor.schedule.senin}">
-            <label for="selasa">Selasa:</label>
-            <input type="text" id="selasa" value="${doctor.schedule.selasa}">
-            <label for="rabu">Rabu:</label>
-            <input type="text" id="rabu" value="${doctor.schedule.rabu}">
-            <label for="kamis">Kamis:</label>
-            <input type="text" id="kamis" value="${doctor.schedule.kamis}">
-            <label for="jumat">Jumat:</label>
-            <input type="text" id="jumat" value="${doctor.schedule.jumat}">
-            <label for="sabtu">Sabtu:</label>
-            <input type="text" id="sabtu" value="${doctor.schedule.sabtu}">
-            <label for="minggu">Minggu:</label>
-            <input type="text" id="minggu" value="${doctor.schedule.minggu}">
-            <button type="submit">Update Jadwal</button>
-        </form>
-        <button onclick="renderScheduleManagement()">Batal</button>
-    `;
-
-    document.getElementById('editScheduleForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        updateSchedule(doctorId);
-    });
-}
-
-function updateSchedule(doctorId) {
-    const doctor = doctors.find(d => d.id === doctorId);
-    doctor.schedule = {
-        senin: document.getElementById('senin').value,
-        selasa: document.getElementById('selasa').value,
-        rabu: document.getElementById('rabu').value,
-        kamis: document.getElementById('kamis').value,
-        jumat: document.getElementById('jumat').value,
-        sabtu: document.getElementById('sabtu').value,
-        minggu: document.getElementById('minggu').value
-    };
-    renderScheduleManagement();
-}
-
 function renderAdminInterface() {
     const app = document.getElementById('app');
-    if (state.adminView === 'login') {
+    if (!state.currentAdmin) {
         app.innerHTML = `
             <div class="card">
                 <h2>Admin Login</h2>
                 <input type="text" id="adminUsername" placeholder="Username" required>
                 <input type="password" id="adminPassword" placeholder="Password" required>
                 <button onclick="handleAdminLogin()">Login</button>
-                <button onclick="cancelAdminLogin()">Cancel</button>
             </div>
         `;
-    } else if (state.currentAdmin) {
-        renderAdminDashboard();
+    } else {
+        app.innerHTML = `
+            <div class="card">
+                <h2>Welcome, ${state.currentAdmin.username}</h2>
+                <p>Hospital: ${hospitals.find(h => h.id === state.currentAdmin.hospitalId).name}</p>
+                <button onclick="renderAdminPatients()">Manage Patients</button>
+                <button onclick="renderAdminDoctors()">Manage Doctors</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        `;
     }
 }
 
@@ -576,6 +335,106 @@ function renderAdminDoctors() {
     `;
 }
 
+function showAddDoctorForm() {
+    const app = document.getElementById('app');
+    app.innerHTML = `
+        <div class="card">
+            <h2>Add New Doctor</h2>
+            <input type="text" id="doctorName" placeholder="Doctor Name" required>
+            <input type="text" id="speciality" placeholder="Speciality" required>
+            <input type="text" id="subSpeciality" placeholder="Sub-Speciality" required>
+            <h3>Schedule</h3>
+            <input type="text" id="scheduleMonday" placeholder="Monday Schedule">
+            <input type="text" id="scheduleTuesday" placeholder="Tuesday Schedule">
+            <input type="text" id="scheduleWednesday" placeholder="Wednesday Schedule">
+            <input type="text" id="scheduleThursday" placeholder="Thursday Schedule">
+            <input type="text" id="scheduleFriday" placeholder="Friday Schedule">
+            <input type="text" id="scheduleSaturday" placeholder="Saturday Schedule">
+            <input type="text" id="scheduleSunday" placeholder="Sunday Schedule">
+            <button onclick="addDoctor()">Add Doctor</button>
+            <button onclick="renderAdminDoctors()">Cancel</button>
+        </div>
+    `;
+}
+
+function addDoctor() {
+    const name = document.getElementById('doctorName').value;
+    const speciality = document.getElementById('speciality').value;
+    const subSpeciality = document.getElementById('subSpeciality').value;
+    const schedule = {
+        senin: document.getElementById('scheduleMonday').value || '-',
+        selasa: document.getElementById('scheduleTuesday').value || '-',
+        rabu: document.getElementById('scheduleWednesday').value || '-',
+        kamis: document.getElementById('scheduleThursday').value || '-',
+        jumat: document.getElementById('scheduleFriday').value || '-',
+        sabtu: document.getElementById('scheduleSaturday').value || '-',
+        minggu: document.getElementById('scheduleSunday').value || '-'
+    };
+
+    const newDoctor = {
+        id: doctors.length + 1,
+        name,
+        speciality,
+        subSpeciality,
+        schedule,
+        image: 'default-doctor.jpg',
+        hospitalId: state.currentAdmin.hospitalId
+    };
+
+    doctors.push(newDoctor);
+    renderAdminDoctors();
+}
+
+function editDoctor(doctorId) {
+    const doctor = doctors.find(d => d.id === doctorId);
+    const app = document.getElementById('app');
+    app.innerHTML = `
+        <div class="card">
+            <h2>Edit Doctor</h2>
+            <input type="text" id="doctorName" value="${doctor.name}" required>
+            <input type="text" id="speciality" value="${doctor.speciality}" required>
+            <input type="text" id="subSpeciality" value="${doctor.subSpeciality}" required>
+            <h3>Schedule</h3>
+            <input type="text" id="scheduleMonday" value="${doctor.schedule.senin}" placeholder="Monday Schedule">
+            <input type="text" id="scheduleTuesday" value="${doctor.schedule.selasa}" placeholder="Tuesday Schedule">
+            <input type="text" id="scheduleWednesday" value="${doctor.schedule.rabu}" placeholder="Wednesday Schedule">
+            <input type="text" id="scheduleThursday" value="${doctor.schedule.kamis}" placeholder="Thursday Schedule">
+            <input type="text" id="scheduleFriday" value="${doctor.schedule.jumat}" placeholder="Friday Schedule">
+            <input type="text" id="scheduleSaturday" value="${doctor.schedule.sabtu}" placeholder="Saturday Schedule">
+            <input type="text" id="scheduleSunday" value="${doctor.schedule.minggu}" placeholder="Sunday Schedule">
+            <button onclick="updateDoctor(${doctorId})">Update Doctor</button>
+            <button onclick="renderAdminDoctors()">Cancel</button>
+        </div>
+    `;
+}
+
+function updateDoctor(doctorId) {
+    const doctor = doctors.find(d => d.id === doctorId);
+    doctor.name = document.getElementById('doctorName').value;
+    doctor.speciality = document.getElementById('speciality').value;
+    doctor.subSpeciality = document.getElementById('subSpeciality').value;
+    doctor.schedule = {
+        senin: document.getElementById('scheduleMonday').value || '-',
+        selasa: document.getElementById('scheduleTuesday').value || '-',
+        rabu: document.getElementById('scheduleWednesday').value || '-',
+        kamis: document.getElementById('scheduleThursday').value || '-',
+        jumat: document.getElementById('scheduleFriday').value || '-',
+        sabtu: document.getElementById('scheduleSaturday').value || '-',
+        minggu: document.getElementById('scheduleSunday').value || '-'
+    };
+
+    renderAdminDoctors();
+}
+
+function deleteDoctor(doctorId) {
+    if (confirm('Are you sure you want to delete this doctor?')) {
+        const index = doctors.findIndex(d => d.id === doctorId);
+        if (index !== -1) {
+            doctors.splice(index, 1);
+            renderAdminDoctors();
+        }
+    }
+}
 
 function renderHome() {
     const app = document.getElementById('app');
@@ -802,6 +661,7 @@ function selectDoctor(doctorId) {
 }
 
 function startChat(doctorId) {
+    // Implement chat functionality
     console.log('Starting chat with doctor:', doctorId);
 }
 
@@ -1082,8 +942,7 @@ function renderConfirmation() {
             bpjsNumber: '',
             currentAdmin: null,
             adminLoggedIn: false,
-            currentView: 'home',
-            adminView: 'login'
+            currentView: 'home'
         };
         renderApp();
     });
@@ -1095,31 +954,29 @@ function handleAdminLogin() {
     const admin = admins.find(a => a.username === username && a.password === password);
     if (admin) {
         state.currentAdmin = admin;
-        state.adminView = 'dashboard';
+        state.adminLoggedIn = true;
+        state.view = 'dashboard';
         renderApp();
     } else {
         alert('Invalid username or password');
     }
 }
 
-function cancelAdminLogin() {
-    state.adminView = 'login';
-    state.currentView = 'home';
-    renderApp();
-}
-
 function logout() {
     state.currentAdmin = null;
-    state.adminView = 'login';
-    state.currentView = 'home';
+    state.adminLoggedIn = false;
     renderApp();
 }
 
+// New function to check if the selected date is available
 function isDateAvailable(schedule, selectedDate) {
     const date = new Date(selectedDate);
-    const day = date.toLocaleString('id-ID', { weekday: 'long' }).toLowerCase(); 
+    const day = date.toLocaleString('id-ID', { weekday: 'long' }).toLowerCase(); // Get the day in Indonesian
+
+    // Check if the schedule for the selected day is available
     return schedule[day] !== '-';
 }
 
+// Initialize the app
 renderApp();
 
