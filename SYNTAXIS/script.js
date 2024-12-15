@@ -802,7 +802,6 @@ function selectDoctor(doctorId) {
 }
 
 function startChat(doctorId) {
-    // Implement chat functionality
     console.log('Starting chat with doctor:', doctorId);
 }
 
@@ -1116,15 +1115,11 @@ function logout() {
     renderApp();
 }
 
-// New function to check if the selected date is available
 function isDateAvailable(schedule, selectedDate) {
     const date = new Date(selectedDate);
-    const day = date.toLocaleString('id-ID', { weekday: 'long' }).toLowerCase(); // Get the day in Indonesian
-
-    // Check if the schedule for the selected day is available
+    const day = date.toLocaleString('id-ID', { weekday: 'long' }).toLowerCase(); 
     return schedule[day] !== '-';
 }
 
-// Initialize the app
 renderApp();
 
