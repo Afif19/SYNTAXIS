@@ -29,12 +29,17 @@ header {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem 0;
+    position: sticky;
+    z-index: auto;
+    top: 0;
 }
 
 header .container {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
+    
 }
 
 .logo {
@@ -70,7 +75,8 @@ nav ul li a:hover, nav ul li a.active {
 }
 
 main {
-    padding: 2rem 0 5rem; /* Add bottom padding to account for fixed footer */
+    width: aoto;
+    height: 65rem;
 }
 
 .card {
@@ -427,6 +433,7 @@ nav ul li a:hover, nav ul li a.active {
 
 main {
     padding: 2rem 0 5rem;
+    background: linear-gradient(135deg, #84fab0, #8fd3f4);
 }
 
 .card {
