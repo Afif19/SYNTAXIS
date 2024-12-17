@@ -75,7 +75,7 @@ nav ul li a.active {
 
 main {
   width: aoto;
-  height: 65rem;
+  height: 100rem;
 }
 
 .card {
@@ -434,7 +434,7 @@ nav ul li a.active {
 
 main {
   padding: 2rem 0 5rem;
-  background: radial-gradient(
+    background: radial-gradient(
     circle,
     #4a90e2,
     #3672b9,
@@ -694,9 +694,10 @@ h1 {
 }
 
 .card-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
 }
 
 .btn-profile {
@@ -750,8 +751,23 @@ h1 {
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
 
+.back-btn {
+    background-color: #fbbf24;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #f59e0b;
+}
 footer {
   background-color: #ffffff;
   padding: 1rem 0;
@@ -826,3 +842,4 @@ footer a {
     margin-top: 0.5rem;
   }
 }
+
