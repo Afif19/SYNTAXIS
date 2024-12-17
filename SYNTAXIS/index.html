@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RS JIH - The Ultimate Value Healthcare</title>
+    <title>DIGIMED</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -12,94 +12,32 @@
     <header>
         <div class="container">
             <div class="logo">
-                <img src="rs-jih-logo.png" alt="RS JIH Logo">
-                <span>RS JIH</span>
+                <img src="hospital-icon.png" alt="Hospital Icon" width="40" height="40">
+                <span>DIGIMED</span>
             </div>
             <nav>
                 <ul>
-                    <li><a href="#" class="active">Beranda</a></li>
-                    <li><a href="#">Layanan</a></li>
-                    <li><a href="#">Dokter</a></li>
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Kontak</a></li>
+                    <li><a href="#" data-view="home">Beranda</a></li>
+                    <li><a href="#" data-view="services">Layanan</a></li>
+                    <li><a href="#" data-view="about">Tentang Kami</a></li>
+                    <li><a href="#" data-view="contact">Kontak</a></li>
+                    <li><a href="#" onclick="renderAdminInterface()">Admin Login</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <section class="hero-section">
-            <div class="container">
-                <div class="hero-search">
-                    <div class="search-grid">
-                        <div class="search-field">
-                            <label>RUMAH SAKIT</label>
-                            <select id="hospitalSelect">
-                                <option value="">Rumah sakit</option>
-                                <option value="1">RS JIH Yogyakarta</option>
-                                <option value="2">RS JIH Solo</option>
-                            </select>
-                        </div>
-                        <div class="search-field">
-                            <label>SPESIALIS</label>
-                            <select id="specialistSelect">
-                                <option value="">Semua Spesialis</option>
-                            </select>
-                        </div>
-                        <div class="search-field">
-                            <label>SUBSPESIALIS</label>
-                            <select id="subspecialistSelect">
-                                <option value="">Semua Subspesialis</option>
-                            </select>
-                        </div>
-                        <button class="search-btn">CARI</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <div class="container">
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <img src="emergency-icon.png" alt="Emergency">
-                    </div>
-                    <h3>Layanan Gawat Darurat</h3>
-                    <p>24 Jam Siap Melayani</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <img src="appointment-icon.png" alt="Appointment">
-                    </div>
-                    <h3>Jadwal Dokter</h3>
-                    <p>Cek Jadwal & Buat Janji</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <img src="location-icon.png" alt="Location">
-                    </div>
-                    <h3>Lokasi Kami</h3>
-                    <p>Temukan RS JIH Terdekat</p>
-                </div>
+            <div id="app">
+                <!-- Content will be dynamically inserted here -->
             </div>
         </div>
-
-        <section class="activities">
-            <div class="container">
-                <div class="activities-header">
-                    <h2 class="activities-title">Aktivitas Kami</h2>
-                    <p class="activities-subtitle">SAY HELLO TO FUTURE</p>
-                </div>
-                <div class="activities-grid" id="activitiesGrid">
-                    <!-- Activities will be populated by JavaScript -->
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 RS JIH - The Ultimate Value Healthcare. All rights reserved.</p>
+            <p>&copy; 2024 RS Booking System. All rights reserved.</p>
             <div>
                 <a href="#">Syarat & Ketentuan</a>
                 <a href="#">Privasi</a>
@@ -110,3 +48,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
