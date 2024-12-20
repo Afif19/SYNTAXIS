@@ -16,9 +16,7 @@ const admins = [
         username:"admin_rs_jih",
         password:"jih123",
         hospitalid: 3,
-    }
-    
-
+    }   
 ];
 
 const patients = [
@@ -394,78 +392,67 @@ function renderNavbar() {
     renderAdminHome(); // Menampilkan konten beranda admin secara default
 }
 
-function renderAdminDashboard() {
-    const app = document.getElementById('app');
-    const hospital = hospitals.find(h => h.id === state.currentAdmin.hospitalId);
-    
-    app.innerHTML = `
-        <div class="admin-dashboard">
-            <h2>Selamat Datang, ${state.currentAdmin.username}</h2>
-            <p>Rumah Sakit: ${hospital.name}</p>
-            <div class="admin-menu">
-                <button onclick="renderAdminHome()">Beranda</button>
-                <button onclick="renderPatientStatistics()">Statistik Pasien</button>
-                <button onclick="renderDoctorManagement()">Manajemen Dokter</button>
-                <button onclick="renderScheduleManagement()">Manajemen Jadwal</button>
-            </div>
-            <div id="adminContent"></div>
-        </div>
-    `;
-    renderAdminHome(); // Menampilkan konten beranda admin secara default
-}
-
 function renderPatientStatistics() {
-    const adminContent = document.getElementById('adminContent');
-    const hospitalPatients = patients.filter(p => p.hospitalId === state.currentAdmin.hospitalId);
+    const adminContent = document.getElementById("adminContent");
+    let getData = JSON.parse(localStorage.getItem("state"));
+    // const hospitalPatients = patients.filter((p) => p.hospitalId == 1);
+    const hospitalPatients = patients.filter((p) => p.hospitalId == getData.currentAdmin);
     const poliCounts = hospitalPatients.reduce((acc, patient) => {
         acc[patient.poli] = (acc[patient.poli] || 0) + 1;
         return acc;
     }, {});
 
-    let statsHTML = '<h3>Statistik Pasien</h3><ul>';
+    let statsHTML = `<div class="statistics-container"><h3>Statistik Pasien</h3><ul class="statistics-list">`;
     for (const [poli, count] of Object.entries(poliCounts)) {
         statsHTML += `<li>${poli}: ${count} pasien</li>`;
     }
-    statsHTML += '</ul>';
+    statsHTML += "</ul></div>";
 
     adminContent.innerHTML = statsHTML;
 }
 
 function renderDoctorManagement() {
-    const adminContent = document.getElementById('adminContent');
-    const hospitalDoctors = doctors.filter(d => d.hospitalId === state.currentAdmin.hospitalId);
+    const adminContent = document.getElementById("adminContent");
+    let getData = JSON.parse(localStorage.getItem("state"));
+    const hospitalDoctors = doctors.filter((d) => d.hospitalId === getData.currentAdmin);
 
     let doctorListHTML = `
-        <h3>Manajemen Dokter</h3>
-        <button onclick="showAddDoctorForm()">Tambah Dokter Baru</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Spesialisasi</th>
-                    <th>Sub-Spesialisasi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+            <div class="mater">
+                <h3>Manajemen Dokter</h3>
+                <div>
+                <button onclick="showAddDoctorForm()">Tambah Dokter Baru</button>
+                </div>
+            </div>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th class="border-def">Nama</th>
+                        <th class="border-def">Spesialisasi</th>
+                        <th class="border-def">Sub-Spesialisasi</th>
+                        <th class="border-def">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
-    
-    for (const doctor of hospitalDoctors) {
-        doctorListHTML += `
+
+  for (const doctor of hospitalDoctors) {
+    doctorListHTML += `
             <tr>
                 <td>${doctor.name}</td>
                 <td>${doctor.speciality}</td>
                 <td>${doctor.subSpeciality}</td>
-                <td>
-                    <button onclick="editDoctor(${doctor.id})">Edit</button>
+                <td class="btn-table" style="margin-top:0;">
+                  <div class="btn-table">
                     <button onclick="deleteDoctor(${doctor.id})">Hapus</button>
+                    <button onclick="editDoctor(${doctor.id})">Edit</button>
+                  </div>
                 </td>
             </tr>
         `;
-    }
-    doctorListHTML += '</tbody></table>';
+  }
+  doctorListHTML += "</tbody></table>";
 
-    adminContent.innerHTML = doctorListHTML;
+  adminContent.innerHTML = doctorListHTML;
 }
 
 function renderScheduleManagement() {
