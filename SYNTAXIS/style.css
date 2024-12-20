@@ -1,6 +1,6 @@
 :root {
-  --primary-color: #4a90e2;
-  --secondary-color: #3672b9;
+  --primary-color: #008a95;
+  --secondary-color: #006e77;
   --background-color: #f5f7fa;
   --text-color: #333333;
   --light-text-color: #666666;
@@ -13,7 +13,7 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--background-color);
@@ -29,9 +29,6 @@ header {
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
-  position: sticky;
-  z-index: auto;
-  top: 0;
 }
 
 header .container {
@@ -55,6 +52,7 @@ header .container {
 nav ul {
   display: flex;
   list-style-type: none;
+  align-items: center;
 }
 
 nav ul li {
@@ -74,8 +72,8 @@ nav ul li a.active {
 }
 
 main {
-  width: aoto;
-  height: 100rem;
+  padding: 2rem 0 5rem;
+  /* Add bottom padding to account for fixed footer */
 }
 
 .card {
@@ -98,8 +96,7 @@ h2 {
 }
 
 select,
-input,
-button {
+input {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1rem;
@@ -116,13 +113,15 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
-button {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+button.btn-navbar {
+  text-decoration: none !important;
+  color: var(--text-color) !important;
+  font-weight: 500 !important;
+  font-family: 'poppins', sans-serif;
+  transition: color 0.3s ease !important;
+  background: none !important;
+  padding: 0;
+  margin: 0;
 }
 
 button:hover {
@@ -134,13 +133,356 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+}
+
+#message {
+  display: block;
+  width: 100%;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--bs-body-color);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+#message:focus {
+  outline: none;
+  border-color: #008a95;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.h-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  background: linear-gradient(to top right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3) 100%), url('../img/bg.jpg');
+  object-position: cover;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7) !important;
+}
+
+.mater {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.btn-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.border-def {
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #ddeff6;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #e0ecf0;
+}
+
+.btn-table button {
+  margin: 5px;
+  padding: 5px 10px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.statistics-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  width: 80%;
+  text-align: center;
+}
+
+.statistics-container h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.statistics-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.statistics-list li {
+  font-size: 18px;
+  margin: 10px 0;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #555;
+}
+
+.statistics-list li:hover {
+  background-color: #f0f8ff;
+  border-color: #008a95;
+  color: #008a95;
+}
+
+.admin-home-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  width: 80%;
+  text-align: center;
+}
+
+.admin-home-container h3 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.admin-home-container span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #008a95;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.admin-home-container p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.admin-profile-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  width: 70%;
+  text-align: left;
+}
+
+.admin-profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-profile-header img {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
+  border: 2px solid #008a95;
+}
+
+.admin-profile-header h3 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+}
+
+.admin-profile-details p {
+  font-size: 16px;
+  color: #555;
+  margin: 10px 0;
+}
+
+.admin-profile-details span {
+  font-weight: bold;
+  color: #008a95;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-pic {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border: 2px solid #008a95;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 1000;
+  min-width: 150px;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 10px;
+  font-size: 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  color: #333;
+  cursor: pointer;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.user-profile {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-pic-large {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #008a95;
+}
+
+.profile-details p {
+  margin: 5px 0;
+}
+
+.btn-edit {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #008a95;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background-color: #006e77;
+}
+
+.edit-profile {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-save {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+}
+
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
   margin-bottom: 1rem;
   max-width: 100%;
-  margin: 0; /* Updated to remove default margin */
+  margin: 0;
+  /* Updated to remove default margin */
+
 }
 
 .calendar-header {
@@ -271,6 +613,7 @@ button:disabled {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Add these styles for the new schedule feature */
 
 .doctor-schedule {
@@ -331,38 +674,38 @@ footer a {
 
 @media (max-width: 768px) {
   header .container {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   nav ul {
-    margin-top: 1rem;
+      margin-top: 1rem;
   }
 
   nav ul li {
-    margin-left: 1rem;
-    margin-right: 1rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
   }
 
   .doctor-list {
-    grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
   }
 
   .calendar-and-schedule {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   footer .container {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   footer a {
-    margin-top: 0.5rem;
+      margin-top: 0.5rem;
   }
 }
 
 :root {
-  --primary-color: #4a90e2;
-  --secondary-color: #3672b9;
+  --primary-color: #008a95;
+  --secondary-color: #006e77;
   --background-color: #f5f7fa;
   --text-color: #333333;
   --light-text-color: #666666;
@@ -375,7 +718,7 @@ footer a {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--background-color);
@@ -434,14 +777,24 @@ nav ul li a.active {
 
 main {
   padding: 2rem 0 5rem;
-    background: radial-gradient(
-    circle,
-    #4a90e2,
-    #3672b9,
-    #2a4e80,
-    #1f355b,
-    #38415b
-  );
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.55rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 .card {
@@ -554,8 +907,7 @@ button:disabled {
 }
 
 .search-container {
-  background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.8)),
-    url("hospital-bg.jpg");
+  /* background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.8)), url('hospital-bg.jpg'); */
   background-size: cover;
   background-position: center;
   padding: 2rem 0;
@@ -694,14 +1046,13 @@ h1 {
 }
 
 .card-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .btn-profile {
-  background-color: #1e40af;
+  background-color: #008a95;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -712,7 +1063,7 @@ h1 {
 }
 
 .btn-profile:hover {
-  background-color: #1e3a8a;
+  background-color: #006e77;
 }
 
 .btn-chat {
@@ -751,23 +1102,8 @@ h1 {
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
 }
 
-.back-btn {
-    background-color: #fbbf24;
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.back-btn:hover {
-    background-color: #f59e0b;
-}
 footer {
   background-color: #ffffff;
   padding: 1rem 0;
@@ -794,52 +1130,51 @@ footer a {
 
 @media (max-width: 768px) {
   header .container {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   nav ul {
-    margin-top: 1rem;
+      margin-top: 1rem;
   }
 
   nav ul li {
-    margin-left: 1rem;
-    margin-right: 1rem;
+      margin-left: 1rem;
+      margin-right: 1rem;
   }
 
   .search-wrapper {
-    grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
   }
 
   .calendar-and-schedule {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   .doctor-info {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
   }
 
   .specialty-tags {
-    justify-content: center;
+      justify-content: center;
   }
 
   .card-actions {
-    flex-direction: column;
-    gap: 1rem;
+      flex-direction: column;
+      gap: 1rem;
   }
 
   .btn-profile,
   .btn-chat {
-    width: 100%;
+      width: 100%;
   }
 
   footer .container {
-    flex-direction: column;
+      flex-direction: column;
   }
 
   footer a {
-    margin-top: 0.5rem;
+      margin-top: 0.5rem;
   }
 }
-
