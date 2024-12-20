@@ -1,14 +1,53 @@
-// Mock data for admins, patients, and doctors
 const admins = [
-    { id: 1, username: 'admin_rsud_sleman', password: 'password123', hospitalId: 1 },
-    { id: 2, username: 'admin_rs_puri_husada', password: 'password456', hospitalId: 2 },
-    { id: 3, username: 'admin_rs_jih', password: 'password789', hospitalId: 3 },
+    {
+        id: 1,
+        username:"admin_rsud_sleman",
+        password:"sleman123",
+        hospitalid: 1,
+    },
+    {
+        id: 2,
+        username:"admin_rs_puri",
+        password:"puri123",
+        hospitalid: 2,
+    },
+    {
+        id: 3,
+        username:"admin_rs_jih",
+        password:"jih123",
+        hospitalid: 3,
+    }
+    
+
 ];
 
 const patients = [
-    { id: 1, name: 'John Doe', nik: '1234567890', poli: 'Anak', doctor: 'dr. Ahmad Syafiq, Sp.A', date: '2023-06-15', hospitalId: 1 },
-    { id: 2, name: 'Jane Smith', nik: '0987654321', poli: 'Penyakit Dalam', doctor: 'dr. Michael Tandra, Sp.PD', date: '2023-06-16', hospitalId: 2 },
-    { id: 3, name: 'Bob Johnson', nik: '1122334455', poli: 'Mata', doctor: 'dr. Lisa Gunawan, Sp.M', date: '2023-06-17', hospitalId: 3 },
+  { id: 1,
+    name: "John Doe",
+    nik: "1234567890",
+    poli: "Anak",
+    doctor: "dr. Ahmad Syafiq, Sp.A",
+    date: "2023-06-15",
+    hospitalId: 1,
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    nik: "0987654321",
+    poli: "Penyakit Dalam",
+    doctor: "dr. Michael Tandra, Sp.PD",
+    date: "2023-06-16",
+    hospitalId: 2,
+  },
+  {
+    id: 3,
+    name: "Bob Johnson",
+    nik: "1122334455",
+    poli: "Mata",
+    doctor: "dr. Lisa Gunawan, Sp.M",
+    date: "2023-06-17",
+    hospitalId: 3,
+  },
 ];
 
 const doctors = [
@@ -19,7 +58,7 @@ const doctors = [
         subSpeciality: 'Gastro Hepatologi',
         schedule: {
             senin: '08:00 - 12:00',
-            selasa: '13:00 - 17:00',
+            selasa: '13:00 - 16:00',
             rabu: '-',
             kamis: '09:00 - 14:00',
             jumat: '14:00 - 17:00',
@@ -152,10 +191,12 @@ let state = {
     insuranceType: 'umum',
     bpjsNumber: '',
     currentAdmin: null,
-    adminLoggedIn: false, // Changed to false initially
+    adminLoggedIn: false, 
     currentView: 'home',
-    adminView: 'login' // New property for admin view state
+    adminView: 'login' 
 };
+
+localStorage.setItem('state',JSON.stringify(state));
 
 function generateUniqueCode(speciality) {
     const date = new Date();
@@ -188,38 +229,43 @@ function generateUniqueCode(speciality) {
 }
 
 function renderApp() {
-    const app = document.getElementById('app');
-    app.innerHTML = '';
+    const app = document.getElementById("app");
+  let getData = JSON.parse(localStorage.getItem("state"));
+  app.innerHTML = "";
 
-    if (state.adminLoggedIn) { // Changed to adminLoggedIn
-        renderAdminDashboard();
-    } else {
-        switch (state.currentView) {
-            case 'home':
-                renderHome();
-                break;
-            case 'services':
-                renderUserInterface();
-                break;
-            case 'about':
-                renderAbout();
-                break;
-            case 'contact':
-                renderContact();
-                break;
-            default:
-                renderHome();
-        }
+  if (getData.adminLoggedIn) {
+    renderAdminDashboard();
+  } else {
+    switch (state.currentView) {
+      case "home":
+        renderHome();
+        break;
+      case "services":
+        renderUserInterface();
+        break;
+      case "about":
+        renderAbout();
+        break;
+      case "contact":
+        renderContact();
+        break;
+      case "admin":
+        renderAuthPage();
+        break;
+      default:
+        renderHome();
     }
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const view = e.target.getAttribute('data-view');
-            state.currentView = view;
-            renderApp();
-        });
+  }
+  document.querySelectorAll("nav a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const view = e.target.getAttribute("data-view");
+      state.currentView = view;
+      renderApp();
     });
+  });
 }
+
 
 function renderUserInterface() {
     switch (state.step) {
@@ -243,6 +289,17 @@ function renderUserInterface() {
             break;
     }
 }
+
+let users = [
+    {
+      username: '',
+      password: '',
+      isLogin: false
+    }
+  ];
+
+localStorage.setItem('users', JSON.stringify(users));
+
 
 function renderAdminDashboard() {
     const app = document.getElementById('app');
