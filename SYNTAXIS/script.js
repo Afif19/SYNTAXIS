@@ -300,6 +300,99 @@ let users = [
 
 localStorage.setItem('users', JSON.stringify(users));
 
+function renderNavbar() {
+    const users = JSON.parse(localStorage.getItem("state")) || []; // Ambil data dari 'users' di localStorage
+    const nav = document.getElementById("nav");
+  
+    // Cari user yang sedang login
+    if (users.isLoggedIn == true) {
+      nav.innerHTML = `
+                      <li><a href="#" data-view="home">Beranda</a></li>
+                      <li><a href="#" data-view="services">Layanan</a></li>
+                      <li><a href="#" data-view="about">Tentang Kami</a></li>
+                      <li><a href="#" data-view="contact">Kontak</a></li>
+                      <li class="btn-navbar dropdown">
+                        <img 
+                          src="./img/default_user.svg" 
+                          alt="Profile Picture" 
+                          class="profile-pic" 
+                          onclick="toggleDropdown()"
+                        />
+                        <div id="dropdownMenu" class="dropdown-menu">
+                          <button class="dropdown-item" onclick="renderUserProfile()">Profil</button>
+                          <button class="dropdown-item" onclick="logoutUser()">Logout</button>
+                        </div>
+                      </li>
+                    `;
+    } else {
+      nav.innerHTML = `<li><a href="#" data-view="home">Beranda</a></li>
+                      <li><a href="#" data-view="services">Layanan</a></li>
+                      <li><a href="#" data-view="about">Tentang Kami</a></li>
+                      <li><a href="#" data-view="contact">Kontak</a></li>
+                      <li><a href="#" data-view="admin">Login</a></li>`;
+    }
+  }
+  
+  function renderNavbarAdmin() {
+    const log = JSON.parse(localStorage.getItem("state"));
+    const nav = document.getElementById("nav");
+  
+    if (log.adminLoggedIn == true) {
+      nav.innerHTML = `
+                      <li><button class="btn-navbar" onclick="renderAdminHome()">Beranda</button></li>
+                      <li><button class="btn-navbar" onclick="renderPatientStatistics()">Statistik Pasien</button></li>
+                      <li><button class="btn-navbar" onclick="renderDoctorManagement()">Manajemen Dokter</button></li>
+                      <li><button class="btn-navbar" onclick="renderScheduleManagement()">Manajemen Jadwal</button></li>
+                      <li class="btn-navbar dropdown">
+                        <img 
+                          src="./img/default_user.svg" 
+                          alt="Profile Picture" 
+                          class="profile-pic" 
+                          onclick="toggleDropdown()"
+                        />
+                        <div id="dropdownMenu" class="dropdown-menu">
+                          <button class="dropdown-item" onclick="renderAdminProfile()">Profil</button>
+                          <button class="dropdown-item" onclick="logout()">Logout</button>
+                        </div>
+                      </li>
+                    `;
+    } else {
+      nav.innerHTML = `<li><a href="#" data-view="home">Beranda</a></li>
+                      <li><a href="#" data-view="services">Layanan</a></li>
+                      <li><a href="#" data-view="about">Tentang Kami</a></li>
+                      <li><a href="#" data-view="contact">Kontak</a></li>
+                      <li><a href="#" data-view="admin">Login</a></li>`;
+    }
+    const btn = document.getElementsByClassName('btn');
+  }
+  
+  function toggleDropdown() {
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    dropdownMenu.classList.toggle("show");
+  }
+  
+  function toggleProfileMenu() {
+    const dropdown = document.getElementById("profileDropdown");
+    dropdown.classList.toggle("hidden");
+  }
+  
+  function renderAdminDashboard() {
+    const app = document.getElementById("app");
+    let getData = JSON.parse(localStorage.getItem("state"));
+    const hospital = hospitals.find((h) => h.id === getData.currentAdmin);
+    const admin = admins.find((h) => h.id === getData.id_admin);
+    renderNavbarAdmin();
+  
+    app.innerHTML = `
+          <div class="admin-dashboard">
+              <div>
+                  <h2>Selamat Datang, ${admin.username}</h2>
+              </div>
+              <div id="adminContent"></div>
+          </div>
+      `;
+    renderAdminHome(); // Menampilkan konten beranda admin secara default
+}
 
 function renderAdminDashboard() {
     const app = document.getElementById('app');
