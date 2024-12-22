@@ -236,6 +236,14 @@ function renderApp() {
   let getData = JSON.parse(localStorage.getItem("state"));
   app.innerHTML = "";
 
+  const cont = document.getElementById("cont");
+  if (state.currentView === "home") {
+    cont.classList.remove("container");
+    renderHome();
+  } else {
+    cont.classList.add("container"); 
+  }
+
   if (getData.adminLoggedIn) {
     renderAdminDashboard();
   } else {
@@ -391,7 +399,7 @@ function renderAdminDashboard() {
   app.innerHTML = `
         <div class="admin-dashboard">
             <div>
-                <h2>Selamat Datang, ${admin.username}</h2>
+                <h2 style="margin-top: 2rem;">Selamat Datang, ${admin.username}</h2>
             </div>
             <div id="adminContent"></div>
         </div>
@@ -747,18 +755,174 @@ function renderAdminProfile() {
 }
 
 function renderHome() {
+  const cont = document.getElementById('cont');
+  cont.classList.remove('container')
   const app = document.getElementById("app");
   updateStateProperty("adminLoggedIn", false);
   app.innerHTML = `
-        <div class="card h-card">
-          <h2 style="text-align:center; margin:0; color:white;">Selamat Datang di RS Booking System</h2>
-          <div class="home">
-            <p style="margin-bottom:22px; color:white;">Sistem pemesanan online untuk rumah sakit terkemuka di Indonesia.</p>
-            <button style="width: 30%" onclick="state.currentView = 'services'; renderApp();">Mulai Booking</button>
-          </div>
+    <div class="h-card">
+      <h2 style="text-align: center; margin: 0; color: white; font-size: 1.8rem;">Selamat Datang di RS Booking System</h2>
+      <div class="home" style="margin-top: 15px; text-align: center;">
+        <p style="margin-bottom: 22px; color: white; font-size: 1.2rem;">Sistem pemesanan online untuk rumah sakit terkemuka di Indonesia.</p>
+        <button style="width: 30%; padding: 10px 20px;" onclick="state.currentView = 'services'; renderApp();">
+          Mulai Booking
+        </button>
+      </div>
+    </div>
+    <div class="container">
+    <div class="extra-section" style="margin-top: 80px; padding: 20px;">
+        <div class="features" style="margin-bottom: 80px;">
+            <button id="getQueueNumberBtn">Dapatkan Nomor Antrean</button>
+            <div id="queueNumberDisplay" style="margin-top: 10px;"></div>
+            <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 20px;">Fitur Utama</h3>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                <div style="flex: 1; max-width: 200px; text-align: center;">
+                    <img src="./img/svg1.svg" alt="Dokter" style="width: 60px; margin-bottom: 10px;">
+                    <p><strong>Konsultasi Dokter</strong></p>
+                    <p>Pesan jadwal konsultasi dengan dokter pilihan Anda.</p>
+                </div>
+                <div style="flex: 1; max-width: 200px; text-align: center;">
+                    <img src="./img/svg2.svg" alt="Rumah Sakit" style="width: 60px; margin-bottom: 10px;">
+                    <p><strong>Pilih Rumah Sakit</strong></p>
+                    <p>Temukan rumah sakit terbaik di lokasi Anda.</p>
+                </div>
+                <div style="flex: 1; max-width: 200px; text-align: center;">
+                    <img src="./img/svg3.svg" alt="Riwayat Booking" style="width: 60px; margin-bottom: 10px;">
+                    <p><strong>Riwayat Booking</strong></p>
+                    <p>Lihat riwayat dan status pemesanan Anda.</p>
+                </div>
+            </div>
         </div>
-    `;
+        <div class="articles-section" style="margin-top: 50px; margin-bottom:70px;">
+            <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 20px;">Artikel Kesehatan</h3>
+            <div class="scroll-bar"
+                style="display: flex; overflow-x: auto; gap: 20px; padding: 10px; scroll-behavior: smooth;">
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/hidup_sehat.png" alt="Artikel 1"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Tips Hidup Sehat</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Pelajari cara menjaga kesehatan tubuh dengan kebiasaan
+                        sehari-hari yang sederhana.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/gejala.webp" alt="Artikel 2"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Mengenal Gejala Awal Penyakit</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Kenali gejala awal penyakit serius agar dapat ditangani
+                        lebih cepat dan efektif.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/manfaat_olahraga.webp" alt="Artikel 3"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Manfaat Olahraga Rutin</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Olahraga memiliki banyak manfaat untuk tubuh dan
+                        kesehatan mental Anda.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/tidur_cukup.png" alt="Artikel 4"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Pentingnya Tidur Cukup</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Tidur yang cukup adalah kunci untuk kesehatan fisik dan
+                        mental yang optimal.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/makanan_bergizi.jpg" alt="Artikel 5"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Nutrisi untuk Kesehatan</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Makan makanan bergizi sangat penting untuk menjaga daya
+                        tahan tubuh.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+                <div class="mb-10"
+                    style="min-width: 250px; max-width: 300px; border: 1px solid #ddd; border-radius: 10px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: transform 0.3s;">
+                    <img src="./img/hidup_aktif.png" alt="Artikel 6"
+                        style="width: 100%; border-radius: 10px; margin-bottom: 10px;">
+                    <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Panduan Hidup Aktif</h4>
+                    <p style="font-size: 0.9rem; color: #555;">Hidup aktif membantu meningkatkan kesehatan secara
+                        keseluruhan.</p>
+                    <a herf="#" style="color: #008A95; cursor: pointer;">Selengkapnya...</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="cta-section"
+        style="padding: 120px 30px; margin-bottom:70px; background: linear-gradient(135deg, #008A95, #00c4cc); color: white; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <h3 style="font-size: 1.8rem; margin-bottom: 15px;">Jangan Lewatkan Kesempatan Ini!</h3>
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">Daftar sekarang dan nikmati kemudahan pemesanan rumah
+            sakit dengan fitur terbaik kami.</p>
+        <button
+            style="padding: 10px 20px; width: 20%; font-size: 1rem; color: #008A95; background: white; border: none; border-radius: 5px; cursor: pointer;"
+            onclick="state.currentView = 'register'; renderApp();">
+            Daftar Sekarang
+        </button>
+    </div>
+    <div class="container">
+        <div class="extra-section">
+            <div class="testimonials"
+                style="margin-bottom: 70px; padding: 25px 0; background-color: #f8f9fa; border-radius: 10px; text-align: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); position: relative; border: 3px solid #008A95">
+                <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Apa Kata Mereka?</h3>
+                <div class="testimonial-carousel">
+                    <div class="testimonial-slide" style="display: flex; flex-direction: column; align-items: center;">
+                        <blockquote style="font-style: italic; margin-bottom: 10px;">"Sistem ini sangat membantu saya untuk
+                            memesan jadwal konsultasi dengan mudah!"</blockquote>
+                        <p>- Andi, Jakarta</p>
+                    </div>
+                    <div class="testimonial-slide" style="display: none; flex-direction: column; align-items: center;">
+                        <blockquote style="font-style: italic; margin-bottom: 10px;">"Rumah sakit yang bekerja sama sangat
+                            profesional. Saya sangat puas."</blockquote>
+                        <p>- Sarah, Surabaya</p>
+                    </div>
+                    <div class="testimonial-slide" style="display: none; flex-direction: column; align-items: center;">
+                        <blockquote style="font-style: italic; margin-bottom: 10px;">"Booking jadwal dokter menjadi lebih
+                            praktis, tanpa harus antre lama."</blockquote>
+                        <p>- Budi, Bandung</p>
+                    </div>
+                    <div class="testimonial-slide" style="display: none; flex-direction: column; align-items: center;">
+                        <blockquote style="font-style: italic; margin-bottom: 10px;">"Sangat membantu orang tua saya
+                            mendapatkan jadwal yang tepat."</blockquote>
+                        <p>- Rina, Semarang</p>
+                    </div>
+                    <div class="testimonial-slide" style="display: none; flex-direction: column; align-items: center;">
+                        <blockquote style="font-style: italic; margin-bottom: 10px;">"Interface-nya ramah pengguna, mudah
+                            digunakan oleh siapa saja."</blockquote>
+                        <p>- Ahmad, Yogyakarta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  `;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const slides = document.querySelectorAll(".testimonial-slide");
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.style.display = i === index ? "flex" : "none";
+    });
+  }
+
+  function autoSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+
+  showSlide(currentSlide);
+  setInterval(autoSlide, 3000);
+});
+
 
 function renderUserProfile() {
   const app = document.getElementById("app");
@@ -782,13 +946,13 @@ function renderUserProfile() {
   // Generate HTML untuk daftar booking
   const bookingList = userBookings.length
     ? userBookings
-        .map((booking, index) => {
-          const doctor = doctors.find((doc) => doc.id === booking.selectedDoctor);
-          const hospital = hospitals.find(
-            (hosp) => hosp.id === parseInt(booking.selectedHospital, 10)
-          );
+      .map((booking, index) => {
+        const doctor = doctors.find((doc) => doc.id === booking.selectedDoctor);
+        const hospital = hospitals.find(
+          (hosp) => hosp.id === parseInt(booking.selectedHospital, 10)
+        );
 
-          return `
+        return `
             <div class="booking-item" style="margin: 15px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
               <h4 style="margin: 0 0 10px; font-size: 1.1rem; color: #333;">Booking ${index + 1}</h4>
               <p><strong>NIK:</strong> ${booking.patientNIK || '-'}</p>
@@ -799,8 +963,8 @@ function renderUserProfile() {
               <p><strong>Dokter:</strong> ${doctor?.name || '-'} (${doctor?.speciality || '-'})</p>
             </div>
           `;
-        })
-        .join("")
+      })
+      .join("")
     : "<p>Tidak ada riwayat booking.</p>";
 
   // Tampilkan profil dan riwayat booking
@@ -820,55 +984,6 @@ function renderUserProfile() {
     </div>
   `;
 }
-
-
-// function editUserProfile() {
-//   const app = document.getElementById("app");
-//   let getData = JSON.parse(localStorage.getItem("state"));
-//   const user = users.find((u) => u.id === getData.id_user);
-
-//   app.innerHTML = `
-//     <div class="edit-profile">
-//       <h3>Edit Profil</h3>
-//       <form onsubmit="saveUserProfile(event)">
-//         <div class="form-group">
-//           <label for="name">Nama:</label>
-//           <input type="text" id="name" value="${user.name}" required>
-//         </div>
-//         <div class="form-group">
-//           <label for="email">Email:</label>
-//           <input type="email" id="email" value="${user.email}" required>
-//         </div>
-//         <div class="form-group">
-//           <label for="phone">No. Telepon:</label>
-//           <input type="text" id="phone" value="${user.phone || ''}">
-//         </div>
-//         <div class="form-group">
-//           <label for="address">Alamat:</label>
-//           <textarea id="address" rows="3">${user.address || ''}</textarea>
-//         </div>
-//         <button type="submit" class="btn-save">Simpan</button>
-//       </form>
-//     </div>
-//   `;
-// }
-
-// function saveUserProfile(event) {
-//   event.preventDefault();
-//   let getData = JSON.parse(localStorage.getItem("state"));
-//   const user = users.find((u) => u.id === getData.id_user);
-
-//   user.name = document.getElementById("name").value;
-//   user.email = document.getElementById("email").value;
-//   user.phone = document.getElementById("phone").value;
-//   user.address = document.getElementById("address").value;
-
-//   // Simpan data ke localStorage atau backend
-//   localStorage.setItem("users", JSON.stringify(users));
-//   alert("Profil berhasil diperbarui!");
-//   renderUserProfile();
-// }
-
 
 function renderAbout() {
   const app = document.getElementById("app");
@@ -1368,13 +1483,13 @@ function renderAuthPage() {
         user.isLoggedIn = true;
         localStorage.setItem("users", JSON.stringify(users));
         updateStateProperty("isLoggedIn", true);
-        updateStateProperty("step", 1); 
+        updateStateProperty("step", 1);
         renderApp();
       } else if (user) {
         user.isLoggedIn = true;
         localStorage.setItem("users", JSON.stringify(users)); // Simpan ke localStorage
         updateStateProperty("isLoggedIn", true);
-        updateStateProperty("step", 3); 
+        updateStateProperty("step", 3);
         renderApp();
       } else {
         alert("Invalid username or password");
@@ -1393,7 +1508,7 @@ function renderAuthPage() {
       updateStateProperty("authMode", "signIn");
       updateStateProperty("username", username);
       updateStateProperty("isLoggedIn", true);
-      updateStateProperty("step", 3); 
+      updateStateProperty("step", 3);
       renderApp();
     }
   });
@@ -1664,3 +1779,23 @@ function renderAdminContact() {
 
 // Initialize the app
 renderApp();
+
+document.getElementById('getQueueNumberBtn').addEventListener('click', () => {
+    const poli = 'Anak'; // Replace with the actual poli value
+    const date = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+
+    fetch('/getQueueNumber', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ poli, date }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('queueNumberDisplay').innerText = `Nomor Antrean Anda: ${data.queueNumber}`;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
