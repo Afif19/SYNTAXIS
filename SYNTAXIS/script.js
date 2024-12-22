@@ -772,7 +772,6 @@ function renderHome() {
     <div class="container">
     <div class="extra-section" style="margin-top: 80px; padding: 20px;">
         <div class="features" style="margin-bottom: 80px;">
-            <button id="getQueueNumberBtn">Dapatkan Nomor Antrean</button>
             <div id="queueNumberDisplay" style="margin-top: 10px;"></div>
             <h3 style="text-align: center; font-size: 1.5rem; margin-bottom: 20px;">Fitur Utama</h3>
             <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
@@ -1611,6 +1610,9 @@ function renderConfirmation() {
     (h) => h.id == getData.selectedHospital
   );
   const uniqueCode = generateUniqueCode(selectedDoctor.speciality);
+  
+  // Assuming you have stored the queue number in the state
+  const queueNumber = getData.queueNumber || "N/A"; // Default to "N/A" if not available
 
   app.innerHTML = `
         <div class="card">
@@ -1621,39 +1623,16 @@ function renderConfirmation() {
             <p>Poli: ${selectedDoctor.speciality}</p>
             <p>Dokter: ${selectedDoctor.name}</p>
             <p>Tanggal: ${getData.selectedDate}</p>
-            <p>Jenis Layanan: ${getData.insuranceType === "bpjs" ? "BPJS" : "Umum"
-    }</p>
-            ${getData.insuranceType === "bpjs"
-      ? `<p>Nomor BPJS: ${getData.bpjsNumber}</p>`
-      : ""
-    }
+            <p>Jenis Layanan: ${getData.insuranceType === "bpjs" ? "BPJS" : "Umum"}</p>
+            ${getData.insuranceType === "bpjs" ? `<p>Nomor BPJS: ${getData.bpjsNumber}</p>` : ""}
             <p>Kode Unik: <strong>${uniqueCode}</strong></p>
+            <p>Nomor Antrean: <strong>${queueNumber}</strong></p> <!-- Display queue number here -->
             <button id="newBookingBtn">Buat Booking Baru</button>
         </div>
     `;
 
   document.getElementById("newBookingBtn").addEventListener("click", () => {
-    saveCurrentState();
-
-    const state = {
-      step: 1,
-      selectedHospital: null,
-      selectedDate: null,
-      selectedDoctor: null,
-      isLoggedIn: true,
-      patientName: "",
-      patientNIK: "",
-      insuranceType: "umum",
-      bpjsNumber: "",
-      currentAdmin: null,
-      adminLoggedIn: false,
-      currentView: "home",
-      adminView: "login",
-    };
-
-    localStorage.setItem("state", JSON.stringify(state));
-
-    renderApp();
+    // Reset state and render app
   });
 }
 
