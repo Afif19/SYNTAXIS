@@ -1,20 +1,4 @@
 // Mock data for admins, patients, and doctors
-const admins = [
-  {
-    id: 1,
-    username: "admin_rsud_sleman",
-    password: "password123",
-    hospitalId: 1,
-  },
-  {
-    id: 2,
-    username: "admin_rs_puri_husada",
-    password: "password456",
-    hospitalId: 2,
-  },
-  { id: 3, username: "admin_rs_jih", password: "password789", hospitalId: 3 },
-];
-
 const patients = [
   {
     id: 1,
@@ -60,7 +44,7 @@ const doctors = [
       sabtu: "-",
       minggu: "-",
     },
-    image: "doctor1.jpg",
+    image: "img/doctor1.jpg",
     hospitalId: 1,
   },
   {
@@ -314,36 +298,71 @@ let users = [
 localStorage.setItem('users', JSON.stringify(users));
 
 function renderNavbar() {
-  const users = JSON.parse(localStorage.getItem("state")) || []; // Ambil data dari 'users' di localStorage
-  const nav = document.getElementById("nav");
+    const state = JSON.parse(localStorage.getItem("state")) || {};
+    const nav = document.getElementById("nav");
 
-  // Cari user yang sedang login
-  if (users.isLoggedIn == true) {
-    nav.innerHTML = `
-                    <li><a href="#" data-view="home">Beranda</a></li>
-                    <li><a href="#" data-view="services">Layanan</a></li>
-                    <li><a href="#" data-view="about">Tentang Kami</a></li>
-                    <li><a href="#" data-view="contact">Kontak</a></li>
-                    <li class="btn-navbar dropdown">
-                      <img 
-                        src="./img/default_user.svg" 
-                        alt="Profile Picture" 
-                        class="profile-pic" 
-                        onclick="toggleDropdown()"
-                      />
-                      <div id="dropdownMenu" class="dropdown-menu">
-                        <button class="dropdown-item" onclick="renderUserProfile()">Profil</button>
-                        <button class="dropdown-item" onclick="logoutUser()">Logout</button>
-                      </div>
-                    </li>
-                  `;
-  } else {
-    nav.innerHTML = `<li><a href="#" data-view="home">Beranda</a></li>
-                    <li><a href="#" data-view="services">Layanan</a></li>
-                    <li><a href="#" data-view="about">Tentang Kami</a></li>
-                    <li><a href="#" data-view="contact">Kontak</a></li>
-                    <li><a href="#" data-view="admin">Login</a></li>`;
-  }
+    // Cek status login admin terlebih dahulu
+    if (state.adminLoggedIn) {
+        nav.innerHTML = `
+            <li><button class="btn-navbar" onclick="renderAdminHome()">Beranda</button></li>
+            <li><button class="btn-navbar" onclick="renderPatientStatistics()">Statistik Pasien</button></li>
+            <li><button class="btn-navbar" onclick="renderDoctorManagement()">Manajemen Dokter</button></li>
+            <li><button class="btn-navbar" onclick="renderScheduleManagement()">Manajemen Jadwal</button></li>
+            <li class="btn-navbar dropdown">
+                <img 
+                    src="./img/default_user.svg" 
+                    alt="Profile Picture" 
+                    class="profile-pic" 
+                    onclick="toggleDropdown()"
+                />
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <button class="dropdown-item" onclick="renderAdminProfile()">Profil</button>
+                    <button class="dropdown-item" onclick="adminLogout()">Logout</button>
+                </div>
+            </li>
+        `;
+    }
+    // Kemudian cek status login user biasa
+    else if (state.isLoggedIn) {
+        nav.innerHTML = `
+            <li><a href="#" data-view="home">Beranda</a></li>
+            <li><a href="#" data-view="services">Layanan</a></li>
+            <li><a href="#" data-view="about">Tentang Kami</a></li>
+            <li><a href="#" data-view="contact">Kontak</a></li>
+            <li class="btn-navbar dropdown">
+                <img 
+                    src="./img/default_user.svg" 
+                    alt="Profile Picture" 
+                    class="profile-pic" 
+                    onclick="toggleDropdown()"
+                />
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <button class="dropdown-item" onclick="renderUserProfile()">Profil</button>
+                    <button class="dropdown-item" onclick="logoutUser()">Logout</button>
+                </div>
+            </li>
+        `;
+    }
+    // Jika tidak ada yang login
+    else {
+        nav.innerHTML = `
+            <li><a href="#" data-view="home">Beranda</a></li>
+            <li><a href="#" data-view="services">Layanan</a></li>
+            <li><a href="#" data-view="about">Tentang Kami</a></li>
+            <li><a href="#" data-view="contact">Kontak</a></li>
+            <li><a href="#" data-view="admin">Login</a></li>
+        `;
+    }
+
+    // Tambahkan event listeners untuk navigasi
+    document.querySelectorAll("nav a").forEach((link) => {
+        link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const view = e.target.getAttribute("data-view");
+            state.currentView = view;
+            renderApp();
+        });
+    });
 }
 
 function renderNavbarAdmin() {
@@ -391,20 +410,36 @@ function toggleProfileMenu() {
 
 function renderAdminDashboard() {
   const app = document.getElementById("app");
-  let getData = JSON.parse(localStorage.getItem("state"));
-  const hospital = hospitals.find((h) => h.id === getData.currentAdmin);
-  const admin = admins.find((h) => h.id === getData.id_admin);
-  renderNavbarAdmin();
-
+  const adminData = JSON.parse(localStorage.getItem('state')).adminData;
+  
   app.innerHTML = `
         <div class="admin-dashboard">
-            <div>
-                <h2 style="margin-top: 2rem;">Selamat Datang, ${admin.username}</h2>
+            <h2>Dashboard Admin</h2>
+            <div class="admin-info">
+                <p>Email: ${adminData.email}</p>
+                <p>Hospital ID: ${adminData.hospitalId}</p>
             </div>
-            <div id="adminContent"></div>
+            <div class="admin-menu">
+                <!-- Tambahkan menu admin sesuai kebutuhan -->
+                <button onclick="showBookings()">Lihat Bookings</button>
+                <button onclick="showDoctors()">Kelola Dokter</button>
+                <button onclick="adminLogout()">Logout</button>
+            </div>
         </div>
     `;
-  renderAdminHome(); // Menampilkan konten beranda admin secara default
+}
+
+function adminLogout() {
+  fetch('admin_logout.php')
+  .then(response => response.json())
+  .then(data => {
+      updateStateProperty("adminLoggedIn", false);
+      updateStateProperty("currentAdmin", null);
+      updateStateProperty("adminData", null);
+      renderNavbar();
+      window.location.reload();
+  })
+  .catch(error => console.error('Error:', error));
 }
 
 function renderPatientStatistics() {
@@ -1400,136 +1435,141 @@ function renderCalendar(year, month) {
 }
 
 function renderAuthPage() {
-  const app = document.getElementById("app");
-  let getData = JSON.parse(localStorage.getItem("state")) || {};
-
-  // Pastikan authMode ada di state, default ke "signIn"
-  if (!getData.authMode) {
-    getData.authMode = "signIn";
-    localStorage.setItem("state", JSON.stringify(getData));
-  }
-
-  const isSignIn = getData.authMode === "signIn";
-
-  app.innerHTML = `
+    const app = document.getElementById("app");
+    
+    app.innerHTML = `
         <div class="card">
-            <h2>${isSignIn ? "Sign In" : "Sign Up"}</h2>
-            <input type="text" id="email" placeholder="Username/Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            ${!isSignIn
-      ? '<input type="password" id="confirmPassword" placeholder="Confirm Password" required>'
-      : ""
-    }
-            <button id="authBtn" disabled>${isSignIn ? "Sign In" : "Sign Up"
-    }</button>
-            <p>
-                ${isSignIn
-      ? "Don't have an account? "
-      : "Already have an account? "
-    }
-                <a href="#" id="toggleAuth">${isSignIn ? "Sign Up" : "Sign In"
-    }</a>
-            </p>
+            <div class="login-type-toggle">
+                <button class="toggle-btn ${!isAdminLogin ? 'active' : ''}" onclick="toggleLoginType(false)">Pasien</button>
+                <button class="toggle-btn ${isAdminLogin ? 'active' : ''}" onclick="toggleLoginType(true)">Admin</button>
+            </div>
+            <h2>${isAdminLogin ? 'Admin Login' : (isSignIn ? 'Sign In Pasien' : 'Sign Up Pasien')}</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="emailInput">Email</label>
+                    <input type="email" id="emailInput" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordInput">Password</label>
+                    <input type="password" id="passwordInput" placeholder="Password" required>
+                </div>
+                <button type="button" id="authBtn">${isAdminLogin ? 'Login Admin' : (isSignIn ? 'Sign In' : 'Sign Up')}</button>
+                ${!isAdminLogin ? `
+                    <p>
+                        ${isSignIn ? 
+                            'Don\'t have an account? <a href="#" id="toggleAuth">Sign Up</a>' : 
+                            'Already have an account? <a href="#" id="toggleAuth">Sign In</a>'}
+                    </p>
+                ` : ''}
+            </form>
         </div>
     `;
 
-  const emailInput = document.getElementById("email");
-  const passwordInput = document.getElementById("password");
-  const confirmPasswordInput = document.getElementById("confirmPassword");
-  const authBtn = document.getElementById("authBtn");
+    setupAuthEventListeners();
+}
 
-  const validateAuthFields = () => {
-    const isValid =
-      emailInput.value &&
-      passwordInput.value &&
-      (isSignIn || confirmPasswordInput?.value === passwordInput.value);
-    authBtn.disabled = !isValid;
-  };
+// Tambahkan variabel global untuk tracking login type
+let isAdminLogin = false;
 
-  emailInput.addEventListener("input", validateAuthFields);
-  passwordInput.addEventListener("input", validateAuthFields);
-  if (!isSignIn) {
-    confirmPasswordInput.addEventListener("input", validateAuthFields);
-  }
-
-  authBtn.addEventListener("click", () => {
-    const username = emailInput.value;
-    const password = passwordInput.value;
-
-    if (isSignIn) {
-      // Login sebagai admin
-      const admin = admins.find(
-        (a) => a.username === username && a.password === password
-      );
-
-      if (admin) {
-        updateStateProperty("adminLoggedIn", true);
-        updateStateProperty("currentAdmin", admin.hospitalId);
-        updateStateProperty("id_admin", admin.id);
-        updateStateProperty("adminView", "dashboard");
-        renderApp();
-        return;
-      }
-
-      // Login sebagai user
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      const get = JSON.parse(localStorage.getItem("state"));
-      const user = users.find(
-        (u) => u.username === username && u.password === password
-      );
-
-      if (get.selectedHospital == null) {
-        user.isLoggedIn = true;
-        localStorage.setItem("users", JSON.stringify(users));
-        updateStateProperty("isLoggedIn", true);
-        updateStateProperty("step", 1);
-        renderApp();
-      } else if (user) {
-        user.isLoggedIn = true;
-        localStorage.setItem("users", JSON.stringify(users)); // Simpan ke localStorage
-        updateStateProperty("isLoggedIn", true);
-        updateStateProperty("step", 3);
-        renderApp();
-      } else {
-        alert("Invalid username or password");
-      }
-    } else {
-      // Sign up sebagai user baru
-      const users = JSON.parse(localStorage.getItem("users")) || [];
-      if (users.some((u) => u.username === username)) {
-        alert("Username already exists. Please choose another.");
-        return;
-      }
-
-      const newUser = { username, password, isLoggedIn: true };
-      users.push(newUser);
-      localStorage.setItem("users", JSON.stringify(users));
-      updateStateProperty("authMode", "signIn");
-      updateStateProperty("username", username);
-      updateStateProperty("isLoggedIn", true);
-      updateStateProperty("step", 3);
-      renderApp();
-    }
-  });
-
-  document.getElementById("toggleAuth").addEventListener("click", (e) => {
-    e.preventDefault();
-    updateStateProperty("authMode", isSignIn ? "signUp" : "signIn");
+function toggleLoginType(isAdmin) {
+    isAdminLogin = isAdmin;
     renderAuthPage();
-  });
 }
 
-// Fungsi untuk memperbarui properti pada state dan menyimpan ke localStorage
-function updateStateProperty(property, value) {
-  let state = JSON.parse(localStorage.getItem("state"));
-  state[property] = value;
-  localStorage.setItem("state", JSON.stringify(state));
-}
+function setupAuthEventListeners() {
+    const authForm = document.getElementById("authForm");
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const authBtn = document.getElementById("authBtn");
+    const toggleAuth = document.getElementById("toggleAuth");
 
-function updateUserProperty(property, value) {
-  let users = JSON.parse(localStorage.getItem("users"));
-  users[property] = value;
-  localStorage.setItem("users", JSON.stringify(users));
+    if (toggleAuth) {
+        toggleAuth.addEventListener("click", (e) => {
+            e.preventDefault();
+            isSignIn = !isSignIn;
+            renderAuthPage();
+        });
+    }
+
+    authBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            alert("Mohon isi email dan password");
+            return;
+        }
+
+        if (isAdminLogin) {
+            // Login admin menggunakan admin_login.php
+            fetch('admin_login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateStateProperty("adminLoggedIn", true);
+                    updateStateProperty("currentAdmin", data.adminData.hospitalId);
+                    updateStateProperty("adminData", {
+                        email: data.adminData.email,
+                        hospitalId: data.adminData.hospitalId
+                    });
+                    renderApp();
+                } else {
+                    alert(data.message || "Login gagal");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan pada sistem');
+            });
+        } else {
+            // Login pasien menggunakan login.php yang sudah ada
+            const endpoint = isSignIn ? 'login.php' : 'signup.php';
+            
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    email: email,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateStateProperty("isLoggedIn", true);
+                    updateStateProperty("email", data.user.email);
+                    updateStateProperty("user_id", data.user.id);
+                    
+                    if (isSignIn) {
+                        const currentState = JSON.parse(localStorage.getItem('state'));
+                        updateStateProperty("step", currentState.selectedHospital ? 3 : 1);
+                    } else {
+                        updateStateProperty("step", 1);
+                    }
+                    
+                    renderApp();
+                } else {
+                    alert(data.message || 'Operasi gagal');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan pada sistem');
+            });
+        }
+    });
 }
 
 function renderBookingForm() {
@@ -1575,24 +1615,45 @@ function renderBookingForm() {
   patientNameInput.addEventListener("input", validateBookingFields);
   patientNIKInput.addEventListener("input", validateBookingFields);
 
+
+  confirmBtn.addEventListener("click", () => {
+    const formData = {
+      doctorId: getData.selectedDoctor,
+      hospitalId: getData.selectedHospital,
+      patientName: patientNameInput.value,
+      nik: patientNIKInput.value,
+      insuranceType: document.getElementById("insuranceType").value,
+      bpjsNumber: document.getElementById("bpjsNumber").value,
+      bookingDate: getData.selectedDate,
+      bookingCode: generateUniqueCode(selectedDoctor.speciality)
+    };
+    fetch('process_booking.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === 'success') {
+        updateStateProperty("patientName", patientNameInput.value);
+        updateStateProperty("patientNIK", patientNIKInput.value);
+        updateStateProperty("step", 6);
+        renderApp();
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+
   const insuranceType = document.getElementById("insuranceType");
   const bpjsField = document.getElementById("bpjsField");
 
   insuranceType.addEventListener("change", (e) => {
     updateStateProperty("insuranceType", e.target.value);
-    let updatedData = JSON.parse(localStorage.getItem("state"));
-    bpjsField.style.display =
-      updatedData.insuranceType === "bpjs" ? "block" : "none";
-  });
-
-  confirmBtn.addEventListener("click", () => {
-    updateStateProperty("patientName", patientNameInput.value);
-    updateStateProperty("patientNIK", patientNIKInput.value);
-    let bpjs = document.getElementById("bpjsNumber").value;
-    updateStateProperty("bpjsNumber", bpjs);
-    state.step = 6;
-    updateStateProperty("step", 6);
-    renderApp();
+    bpjsField.style.display = e.target.value === "bpjs" ? "block" : "none";
   });
 
   backBtn.addEventListener("click", () => {
@@ -1631,11 +1692,30 @@ function renderConfirmation() {
         </div>
     `;
 
-  document.getElementById("newBookingBtn").addEventListener("click", () => {
-    // Reset state and render app
-  });
-}
-
+    document.getElementById("newBookingBtn").addEventListener("click", () => {
+      saveCurrentState();
+  
+      const state = {
+        step: 1,
+        selectedHospital: null,
+        selectedDate: null,
+        selectedDoctor: null,
+        isLoggedIn: true,
+        patientName: "",
+        patientNIK: "",
+        insuranceType: "umum",
+        bpjsNumber: "",
+        currentAdmin: null,
+        adminLoggedIn: false,
+        currentView: "home",
+        adminView: "login",
+      };
+  
+      localStorage.setItem("state", JSON.stringify(state));
+  
+      renderApp();
+    });
+  }
 // Fungsi untuk menyimpan state saat ini sebelum di-reset
 function saveCurrentState() {
   const currentState = JSON.parse(localStorage.getItem("state"));
@@ -1759,22 +1839,327 @@ function renderAdminContact() {
 // Initialize the app
 renderApp();
 
-document.getElementById('getQueueNumberBtn').addEventListener('click', () => {
-    const poli = 'Anak'; // Replace with the actual poli value
-    const date = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+document.getElementById("authBtn").addEventListener("click", () => {
+  const username = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value; // Pastikan ada input untuk nama
+  const nik = document.getElementById("nik").value; // Pastikan ada input untuk NIK
+  const insuranceType = document.getElementById("insuranceType").value; // Pastikan ada input untuk jenis asuransi
 
-    fetch('/getQueueNumber', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ poli, date }),
+  fetch('signup.php', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+          username: username,
+          email: email,
+          password: password,
+          name: name,
+          nik: nik,
+          insuranceType: insuranceType
+      })
+  })
+  .then(response => response.text())
+  .then(data => {
+      alert(data); // Tampilkan pesan dari server
+      if (data.includes("Signup successful")) {
+          // Redirect atau lakukan tindakan lain setelah signup berhasil
+      }
+  })
+  .catch(error => console.error('Error:', error));
+});
+// Contoh event listener untuk sign in
+document.getElementById("authBtn").addEventListener("click", () => {
+const usernameOrEmail = document.getElementById("usernameOrEmail").value;
+const password = document.getElementById("password").value;
+
+fetch('login.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
+        usernameOrEmail: usernameOrEmail,
+        password: password
     })
+})
+.then(response => response.text())
+.then(data => {
+    alert(data); // Tampilkan pesan dari server
+    if (data.includes("Login successful")) {
+        // Redirect atau lakukan tindakan lain setelah login berhasil
+    }
+})
+.catch(error => console.error('Error:', error));
+});
+// Fungsi untuk mengecek status login
+function checkAuthStatus() {
+fetch('check_auth.php')
     .then(response => response.json())
     .then(data => {
-        document.getElementById('queueNumberDisplay').innerText = `Nomor Antrean Anda: ${data.queueNumber}`;
+        if (data.status === 'success' && data.isLoggedIn) {
+            updateStateProperty("isLoggedIn", true);
+            updateStateProperty("user", data.user);
+        } else {
+            updateStateProperty("isLoggedIn", false);
+            updateStateProperty("user", null);
+        }
+        renderApp();
     })
     .catch(error => {
         console.error('Error:', error);
+        updateStateProperty("isLoggedIn", false);
+        updateStateProperty("user", null);
+        renderApp();
     });
+}
+
+// Panggil fungsi ini saat aplikasi dimuat
+document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+function handleAdminLogin(email, password) {
+    fetch('admin_login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Update state
+            updateStateProperty("adminLoggedIn", true);
+            updateStateProperty("currentAdmin", data.admin.hospitalId);
+            updateStateProperty("adminData", data.admin);
+            updateStateProperty("isLoggedIn", false); // Reset user login state
+            
+            // Re-render navbar dan dashboard
+            renderNavbar();
+            renderAdminDashboard();
+        } else {
+            alert(data.message || 'Login gagal');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat login');
+    });
+}
+
+function renderAdminLoginForm() {
+    const app = document.getElementById("app");
+    app.innerHTML = `
+        <div class="card">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <input type="email" id="adminEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="adminPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+        </div>
+    `;
+
+    const adminLoginForm = document.getElementById("adminLoginForm");
+    adminLoginForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const email = document.getElementById("adminEmail").value;
+        const password = document.getElementById("adminPassword").value;
+        
+        handleAdminLogin(email, password);
+    });
+}
+
+function handleAdminLogin(email, password) {
+    fetch('admin_login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Login response:', data); // Debug response
+        if (data.status === 'success') {
+            // Update state
+            updateStateProperty("adminLoggedIn", true);
+            updateStateProperty("currentAdmin", data.admin.hospitalId);
+            updateStateProperty("adminData", data.admin);
+            
+            // Redirect ke dashboard admin
+            renderAdminDashboard();
+        } else {
+            alert(data.message || 'Login gagal');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat login');
+    });
+}
+
+// Tambahkan fungsi ini di script.js (tanpa mengubah kode lain yang sudah ada)
+
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            // Cek apakah ini login admin
+            if (email.includes('@gmail.com')) {
+                // Login admin
+                fetch('admin_login.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        email: email,
+                        password: password
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        window.location.href = 'admin/dashboard.php';
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat login');
+                });
+            } else {
+                // Login user biasa (kode yang sudah ada)
+                // ...
+            }
+        });
+    }
+});
+
+// Tambahkan ini di bagian atas script.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Cek apakah ini halaman admin
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('page') === 'admin') {
+        showAdminLogin();
+    }
+});
+
+function showAdminLogin() {
+    const container = document.getElementById('adminLoginContainer');
+    if (container) {
+        container.style.display = 'block';
+        
+        const form = document.getElementById('adminLoginForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('adminEmailInput').value;
+                const password = document.getElementById('adminPasswordInput').value;
+                handleAdminLogin(email, password);
+            });
+        }
+    }
+}
+
+function handleAdminLogin(email, password) {
+    fetch('admin_login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Update state
+            localStorage.setItem('adminLoggedIn', 'true');
+            localStorage.setItem('adminData', JSON.stringify(data.admin));
+            
+            // Redirect ke dashboard admin
+            window.location.href = 'admin_dashboard.php';
+        } else {
+            alert(data.message || 'Login gagal');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat login');
+    });
+}
+
+// Fungsi untuk menangani view
+function renderView(view) {
+    const app = document.getElementById('app');
+    
+    switch(view) {
+        case 'admin':
+            app.innerHTML = `
+                <div class="card">
+                    <h2>Admin Login</h2>
+                    <form id="adminLoginForm">
+                        <div class="form-group">
+                            <input type="email" id="adminEmail" placeholder="Email Admin" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="adminPassword" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Login</button>
+                    </form>
+                </div>
+            `;
+            
+            // Pasang event listener setelah form dibuat
+            const adminLoginForm = document.getElementById('adminLoginForm');
+            if (adminLoginForm) {
+                adminLoginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('adminEmail').value;
+                    const password = document.getElementById('adminPassword').value;
+                    handleAdminLogin(email, password);
+                });
+            }
+            break;
+        // ... case lainnya ...
+    }
+}
+
+// Event listener untuk navigasi
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const view = this.getAttribute('data-view');
+            renderView(view);
+        });
+    });
+
+    // Cek URL untuk admin page
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('page') === 'admin') {
+        renderView('admin');
+    }
 });
