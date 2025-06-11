@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-
+//ambil data dari rumah sakit sesuai yang di tuju
 // Ambil data rumah sakit
 $stmt = $pdo->query("SELECT * FROM hospitals");
 $hospitals = $stmt->fetchAll(PDO::FETCH_ASSOC);
